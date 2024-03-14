@@ -1,0 +1,103 @@
+version: "1.0"
+services:
+
+  node-express:
+    build:
+      dockerfile: ./apps/node-express/Dockerfile
+      context: .
+    image: node-express:latest
+    restart: always
+    ports:
+      - 8989:8989
+    environment:
+      API_PORT: 8989
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '12'
+          memory: 1200M
+
+  go-echo:
+    build:
+      dockerfile: ./apps/go-echo/Dockerfile
+      context: .
+    image: go-echo:latest
+    restart: always
+    ports:
+      - 8990:8990
+    environment:
+      API_PORT: 8990
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '12'
+          memory: 1200M
+
+  go-spamm-go-echo:
+    build:
+      dockerfile: ./apps/go-spammer/Dockerfile
+      context: .
+    image: go-spammer:latest
+    environment:
+      SPAM_URL: "http://go-echo:8990/hello"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '6'
+          memory: 600M
+    depends_on:
+      - node-express
+      - go-echo
+      - prometheus
+      - grafana
+
+  go-spamm-node-express:
+    build:
+      dockerfile: ./apps/go-spammer/Dockerfile
+      context: .
+    image: go-spammer:latest
+    environment:
+      SPAM_URL: "http://node-express:8989/hello"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '6'
+          memory: 600M
+    depends_on:
+      - node-express
+      - go-echo
+      - prometheus
+      - grafana
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./configs/prom/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    ports:
+      - 9090:9090
+    depends_on:
+      - node-express
+      - go-echo
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD_FORCE=false
+    volumes:
+      - ./configs/prom/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    depends_on:
+      - prometheus
+
+networks:
+  default:
+    name: my-playground-network

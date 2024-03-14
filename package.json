@@ -1,15 +1,23 @@
 {
   "name": "node-vs-go",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
-  "scripts": {},
-  "private": true,
-  "dependencies": {},
-  "devDependencies": {
-    "@nx/js": "18.0.6",
-    "nx": "18.0.6"
+  "scripts": {
+    "build:all": "nx run-many --target=build --all",
+    "run": "npm run build:all && docker-compose up -d --build",
+    "restart": "docker-compose down && npm run run"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "private": true,
+  "dependencies": {
+    "express": "^4.18.3",
+    "prom-client": "^15.1.0"
+  },
+  "devDependencies": {
+    "@nrwl/cli": "^15.9.3",
+    "@nrwl/workspace": "^18.0.6",
+    "@nx/esbuild": "^18.0.6",
+    "@nx/js": "18.0.6",
+    "esbuild": "^0.19.12",
+    "nx": "18.0.6"
+  }
 }
