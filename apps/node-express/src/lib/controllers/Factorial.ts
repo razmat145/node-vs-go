@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 
 const router = express.Router();
 
-router.get('/factorial', (req: Request, res: Response) => {
-  const factorial = computeFactorial(50);
+router.get('/factorial', (_: Request, res: Response) => {
+  const factorial = computeFactorial(100);
 
-  res.send(factorial);
+  res.send(factorial.toString());
 });
 
 function computeFactorial(n: number): number {

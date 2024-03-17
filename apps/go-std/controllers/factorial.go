@@ -6,7 +6,7 @@ import (
 )
 
 func FactorialHandler(w http.ResponseWriter, r *http.Request) {
-	factorial := computeFactorial(50)
+	factorial := computeFactorial(100)
 
 	fmt.Fprint(w, factorial)
 }

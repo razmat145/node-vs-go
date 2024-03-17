@@ -11,10 +11,16 @@ var (
 		Name: "http_response_time_seconds",
 		Help: "Duration of HTTP requests.",
 	}, []string{"path", "method"})
+
+	httpRequestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "http_requests_total",
+		Help: "Total number of HTTP requests.",
+	}, []string{"path", "method"})
 )
 
 func init() {
 	prometheus.MustRegister(httpDuration)
+	prometheus.MustRegister(httpRequestsTotal)
 }
 
 func applyPrometheus(e *echo.Echo) {
@@ -23,6 +29,8 @@ func applyPrometheus(e *echo.Echo) {
 			if c.Path() != "/metrics" {
 				timer := prometheus.NewTimer(httpDuration.WithLabelValues(c.Path(), c.Request().Method))
 				defer timer.ObserveDuration()
+
+				httpRequestsTotal.WithLabelValues(c.Path(), c.Request().Method).Inc()
 			}
 			return next(c)
 		}

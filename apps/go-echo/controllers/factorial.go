@@ -8,7 +8,7 @@ import (
 )
 
 func Factorial(c echo.Context) error {
-	factorial := computeFactorial(50)
+	factorial := computeFactorial(100)
 
 	return c.String(http.StatusOK, strconv.Itoa(factorial))
 }

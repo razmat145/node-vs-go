@@ -1,6 +1,11 @@
 import { RequestListener, IncomingMessage, ServerResponse } from 'http';
 
-import { Registry, Histogram, collectDefaultMetrics } from 'prom-client';
+import {
+  Registry,
+  Histogram,
+  collectDefaultMetrics,
+  Counter,
+} from 'prom-client';
 
 type AsyncRequestListener = (
   req: IncomingMessage,
@@ -11,7 +16,7 @@ class Prom {
   private registry = new Registry();
 
   private timingHistogram: Histogram;
-  private timingHistogramSuffix = 'http_response_time_seconds';
+  private requestCounter: Counter;
 
   private isInitialised = false;
 
@@ -27,8 +32,14 @@ class Prom {
 
   private initialise() {
     this.timingHistogram = new Histogram({
-      name: this.timingHistogramSuffix,
+      name: 'http_response_time_seconds',
       help: 'Duration of HTTP requests.',
+      labelNames: ['method', 'path'],
+      registers: [this.registry],
+    });
+    this.requestCounter = new Counter({
+      name: 'http_requests_total',
+      help: 'Total number of HTTP requests.',
       labelNames: ['method', 'path'],
       registers: [this.registry],
     });
@@ -46,6 +57,11 @@ class Prom {
         await requestListener(req, res);
 
         end({
+          method: req.method,
+          path: req.url,
+        });
+
+        this.requestCounter.inc({
           method: req.method,
           path: req.url,
         });

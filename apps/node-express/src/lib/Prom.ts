@@ -1,11 +1,17 @@
 import { Application, Request, Response, Next } from 'express';
-import { Registry, Histogram, collectDefaultMetrics } from 'prom-client';
+
+import {
+  Registry,
+  Histogram,
+  collectDefaultMetrics,
+  Counter,
+} from 'prom-client';
 
 class Prom {
   private registry = new Registry();
 
   private timingHistogram: Histogram;
-  private timingHistogramSuffix = 'http_response_time_seconds';
+  private requestCounter: Counter;
 
   private isInitialised = false;
 
@@ -20,8 +26,14 @@ class Prom {
 
   private initialise() {
     this.timingHistogram = new Histogram({
-      name: this.timingHistogramSuffix,
+      name: 'http_response_time_seconds',
       help: 'Duration of HTTP requests.',
+      labelNames: ['method', 'path'],
+      registers: [this.registry],
+    });
+    this.requestCounter = new Counter({
+      name: 'http_requests_total',
+      help: 'Total number of HTTP requests.',
       labelNames: ['method', 'path'],
       registers: [this.registry],
     });
@@ -39,7 +51,12 @@ class Prom {
         res.on('finish', () => {
           end({
             method: req.method,
-            path: req.path
+            path: req.path,
+          });
+
+          this.requestCounter.inc({
+            method: req.method,
+            path: req.path,
           });
         });
       }
