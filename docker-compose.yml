@@ -75,7 +75,7 @@ services:
       context: .
     image: go-spammer:latest
     environment:
-      SPAM_URL: "http://go-echo:8990/hello"
+      SPAM_URL: "http://go-echo:8990/factorial"
     deploy:
       replicas: 1
       resources:
@@ -96,7 +96,7 @@ services:
       context: .
     image: go-spammer:latest
     environment:
-      SPAM_URL: "http://go-std:8992/hello"
+      SPAM_URL: "http://go-std:8992/factorial"
     deploy:
       replicas: 1
       resources:
@@ -117,7 +117,7 @@ services:
       context: .
     image: go-spammer:latest
     environment:
-      SPAM_URL: "http://node-express:8989/hello"
+      SPAM_URL: "http://node-express:8989/factorial"
     deploy:
       replicas: 1
       resources:
@@ -138,7 +138,7 @@ services:
       context: .
     image: go-spammer:latest
     environment:
-      SPAM_URL: "http://node-std:8991/hello"
+      SPAM_URL: "http://node-std:8991/factorial"
     deploy:
       replicas: 1
       resources:

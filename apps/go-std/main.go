@@ -12,6 +12,7 @@ func main() {
 	env := newEnv()
 
 	http.Handle("/hello", applyPrometheus(controllers.HelloHandler))
+	http.Handle("/factorial", applyPrometheus(controllers.FactorialHandler))
 	http.Handle("/metrics", promhttp.Handler())
 
 	fmt.Printf("Starting server at port %s\n", env.Port)

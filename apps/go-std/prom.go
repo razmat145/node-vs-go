@@ -19,10 +19,8 @@ func init() {
 
 func applyPrometheus(next http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/metrics" {
-			timer := prometheus.NewTimer(httpDuration.WithLabelValues(r.URL.Path, r.Method))
-			defer timer.ObserveDuration()
-		}
+		timer := prometheus.NewTimer(httpDuration.WithLabelValues(r.URL.Path, r.Method))
+		defer timer.ObserveDuration()
 
 		next.ServeHTTP(w, r)
 	})
