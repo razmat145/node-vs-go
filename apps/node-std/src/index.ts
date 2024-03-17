@@ -4,6 +4,7 @@ import Prom from './lib/Prom';
 
 import { helloWorldHandler } from './lib/controllers/HelloWorld';
 import { factorialHandler } from './lib/controllers/Factorial';
+import { garbageHandler } from './lib/controllers/Garbage';
 
 const server = http.createServer(
   Prom.applyPromMetrics(async (req: IncomingMessage, res: ServerResponse) => {
@@ -12,6 +13,9 @@ const server = http.createServer(
     }
     if (req.url === '/factorial' && req.method === 'GET') {
       return factorialHandler(req, res);
+    }
+    if (req.url === '/garbage' && req.method === 'GET') {
+      return garbageHandler(req, res);
     }
 
     res.writeHead(404, { 'Content-Type': 'text/plain' });

@@ -17,6 +17,7 @@ func main() {
 	// Routes
 	e.GET("/hello", controllers.HelloThere)
 	e.GET("/factorial", controllers.Factorial)
+	e.GET("/garbage", controllers.CreateGarbage)
 
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", env.Port)))

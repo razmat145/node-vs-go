@@ -13,6 +13,7 @@ func main() {
 
 	http.Handle("/hello", applyPrometheus(controllers.HelloHandler))
 	http.Handle("/factorial", applyPrometheus(controllers.FactorialHandler))
+	http.Handle("/garbage", applyPrometheus(controllers.GarbageHandler))
 	http.Handle("/metrics", promhttp.Handler())
 
 	fmt.Printf("Starting server at port %s\n", env.Port)
