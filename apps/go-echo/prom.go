@@ -17,7 +17,7 @@ func init() {
 	prometheus.MustRegister(httpDuration)
 }
 
-func ApplyPrometheus(e *echo.Echo) {
+func applyPrometheus(e *echo.Echo) {
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if c.Path() != "/metrics" {

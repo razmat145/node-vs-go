@@ -1,0 +1,23 @@
+{
+  "name": "go-std",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/go-std",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["cd {projectRoot} && go build -o ../../dist/apps/go-std ."],
+        "parallel": false
+      }
+    },
+    "run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["cd {projectRoot} && go run ."],
+        "parallel": false
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@ func main() {
 
 	e := echo.New()
 
-	ApplyPrometheus(e)
+	applyPrometheus(e)
 
 	// Routes
 	e.GET("/hello", controllers.HelloThere)

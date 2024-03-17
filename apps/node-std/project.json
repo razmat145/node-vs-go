@@ -1,0 +1,70 @@
+{
+  "name": "node-std",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/node-std/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/node-std",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/node-std/src/index.ts",
+        "tsConfig": "apps/node-std/tsconfig.app.json",
+        "assets": [
+          "apps/node-std/src/assets"
+        ],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["^build"],
+      "options": {
+        "buildTarget": "node-std:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "node-std:build:development"
+        },
+        "production": {
+          "buildTarget": "node-std:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/node-std/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}

@@ -11,7 +11,17 @@ scrape_configs:
     static_configs:
       - targets: ['node-express:8989']
 
-  - job_name: 'go'
+  - job_name: 'node-std'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['node-std:8991']
+
+  - job_name: 'go-echo'
     scrape_interval: 5s
     static_configs:
       - targets: ['go-echo:8990']
+
+  - job_name: 'go-std'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['go-std:8992']

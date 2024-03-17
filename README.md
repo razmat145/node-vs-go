@@ -1,47 +1,52 @@
 # Node vs Go
 
-And so started learning..   
+With aim of learning, I'm comparing various operations between the two; starting with very easy (hello world) and towards wherever my understanding and experimentation takes me.
 
-What better way to learn than comparison; and so..
+Currently, recording and comparing Prometheus metrics between the two:  
+- Average response times `rate(http_response_time_seconds_sum[1m]) / rate(http_response_time_seconds_count[1m])`
+- Request rate `rate(http_response_time_seconds_count[1m])`
+- 0.95 Perc response time `histogram_quantile(0.95, rate(http_response_time_seconds_bucket[1m]))`
+- Current memory usage `process_resident_memory_bytes` 
+- Rate of change of memory usage `deriv(process_resident_memory_bytes[1m])`
+- Peak memory usage `max_over_time(process_resident_memory_bytes[1m])`
+- Rate CPU usage `rate(process_cpu_seconds_total[1m])`
 
-Note: this is not meant to be a serious benchmark or anything; just me learning and proving myself I have to let go of NodeJs..
+Note: this is not meant to be a serious benchmark or anything; it's meant to be and should be treated as a learning exercise.
+
+## Current rules
+
+Two golang spammers are setup to spam 25k requests, with a 2 second sleep in between, constantly.   
+
+The receivers are 4 HTTP APIs: 
+- node-express - one of the most used 'slim' NodeJS libraries
+- node-std - std library implementation of a http server
+- go-echo - one of the most used 'slim' Golang libraries
+- go-std - std library implementation of a http server
+
+At time, the comparison might not be fair; or my usage of certain constructs and libraries might not be equal between the above. The comparisons and their results will evolve over time as my understanding does.
 
 ## Hello world!
-Everything starts with a hello world..   
 
-To my surprise `Hello, World` doesn't really make NodeJS loose or look that bad.. not at all..   
-We shall see in further phases. One would say it's meant to be used for `hello world`'s :D  
+Simply `/hello` replying with a 'Hello world' string
 
-For this phase, given two popular 'slim' and simmilar frameworks, Echo (golang) and Express (nodejs); two golang spammers are setup to spam 25k requests, with a 2 second sleep in between, constantly - just out of curiosity    
-
-And so, how does it look..
-##### Average response times 
-![Average response times](./pics/hello_world_average_response_times_v1.png)
+##### Average Response Times 
+![Average response times](./pics/hello_world_average_response_times_v2.png)
 
 #### Request Rate
-![Request rate](./pics/hello_world_request_rate_v1.png)
+![Request rate](./pics/hello_world_request_rate_v2.png)
 
 #### 0.95 Perc Response time
-![Request rate](./pics/hello_world_95_perc_response_v1.png)
+![Request rate](./pics/hello_world_95_perc_response_v2.png)
 
 #### Current Memory Usage
-I definitely did not expect this - I'm definitely doing something wrong (maybe???? hopefully!!)   
-(or, likely, the node prom lib does not record it proper - in docker stats, node takes more mem than go; or maybe V8 is just awesome!?!?!?)   
-TODO!!   
-![Request rate](./pics/hello_world_current_mem_v1.png)
+![Request rate](./pics/hello_world_current_mem_v2.png)
 
 #### Rate of Change of Memory Usage      
-![Request rate](./pics/hello_world_rate_of_change_mem_v1.png)
+![Request rate](./pics/hello_world_rate_of_change_mem_v2.png)
 
 #### Peak Memory Usage   
 Again, surprising..   
-![Request rate](./pics/hello_world_mem_peak_usage_v1.png)
+![Request rate](./pics/hello_world_mem_peak_usage_v2.png)
 
 #### Rate CPU Usage
-![Request rate](./pics/hello_world_rate_cpu_usage_v1.png)   
-
-### Notes and TODOs so far
-- TODO: look into prom usage!?
-- phase 1.5 - add bare bones NodeJs and bare bones Golang to the mix (std lib)
-- phase 2 - lets make some garbage!!!! (on purpose this time :D)
-- TBC
+![Request rate](./pics/hello_world_rate_cpu_usage_v2.png)

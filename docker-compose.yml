@@ -15,7 +15,24 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '12'
+          cpus: '2'
+          memory: 1200M
+
+  node-std:
+    build:
+      dockerfile: ./apps/node-std/Dockerfile
+      context: .
+    image: node-express:latest
+    restart: always
+    ports:
+      - 8991:8991
+    environment:
+      API_PORT: 8991
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2'
           memory: 1200M
 
   go-echo:
@@ -32,7 +49,24 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '12'
+          cpus: '2'
+          memory: 1200M
+
+  go-std:
+    build:
+      dockerfile: ./apps/go-std/Dockerfile
+      context: .
+    image: go-std:latest
+    restart: always
+    ports:
+      - 8992:8992
+    environment:
+      API_PORT: 8992
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2'
           memory: 1200M
 
   go-spamm-go-echo:
@@ -46,13 +80,36 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '6'
+          cpus: '2'
           memory: 600M
     depends_on:
       - node-express
       - go-echo
       - prometheus
       - grafana
+      - go-std
+      - node-std
+
+  go-spamm-go-std:
+    build:
+      dockerfile: ./apps/go-spammer/Dockerfile
+      context: .
+    image: go-spammer:latest
+    environment:
+      SPAM_URL: "http://go-std:8992/hello"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2'
+          memory: 600M
+    depends_on:
+      - node-express
+      - go-echo
+      - prometheus
+      - grafana
+      - go-std
+      - node-std
 
   go-spamm-node-express:
     build:
@@ -65,13 +122,36 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '6'
+          cpus: '2'
           memory: 600M
     depends_on:
       - node-express
       - go-echo
       - prometheus
       - grafana
+      - go-std
+      - node-std
+
+  go-spamm-node-std:
+    build:
+      dockerfile: ./apps/go-spammer/Dockerfile
+      context: .
+    image: go-spammer:latest
+    environment:
+      SPAM_URL: "http://node-std:8991/hello"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2'
+          memory: 600M
+    depends_on:
+      - node-express
+      - go-echo
+      - prometheus
+      - grafana
+      - go-std
+      - node-std
 
   prometheus:
     image: prom/prometheus:latest
