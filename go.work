@@ -4,4 +4,5 @@ use (
 	./apps/go-echo
 	./apps/go-spammer
 	./apps/go-std
+	./apps/go-compose
 )

@@ -1,0 +1,18 @@
+{
+  "name": "go-compose",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/go-compose",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cd {projectRoot} && go build -o ../../dist/apps/ ."
+        ],
+        "parallel": false
+      }
+    }
+  }
+}
